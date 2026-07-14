@@ -2,8 +2,8 @@
 
 import { Box, Group, ActionIcon, HoverCard } from "@mantine/core";
 import { TbPalette } from "react-icons/tb";
-import { ModeSwitch } from "./ModeSwitch";
-import { ColorPicker } from "./ColorPicker";
+import { ModeSwitch } from "@/components/themeConfig/ModeSwitch";
+import { ColorPicker } from "@/components/themeConfig/ColorPicker";
 
 export function ThemeConfig() {
   return (

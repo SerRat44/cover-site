@@ -21,3 +21,26 @@ body {
     background-color: var(--mantine-color-dark-4);
   }
 }
+
+.main-root {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  min-height: 0;
+  scrollbar-width: thin;
+}
+
+.page-body-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}

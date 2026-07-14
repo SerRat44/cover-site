@@ -1,5 +1,5 @@
 import { Box, Flex } from "@mantine/core";
-import { ThemeConfig } from "@/components/ThemeConfig/ThemeConfig";
+import { ThemeConfig } from "@/components/themeConfig/ThemeConfig";
 
 export function Header() {
   return (

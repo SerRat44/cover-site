@@ -11,7 +11,7 @@ import {
 import { useState } from "react";
 import { themeColorValues, type ThemeColorValues } from "@/types/theme";
 import { valueToLabel } from "@/utils";
-import { useThemeContext } from "./ProviderWrapper";
+import { useThemeContext } from "@/components/themeConfig/ProviderWrapper";
 
 type ColorTarget = "primary" | "secondary";
 
