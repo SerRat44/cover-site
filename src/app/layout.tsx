@@ -14,8 +14,8 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
-  title: "Example Site",
-  description: "An example site built with nextjs.",
+  title: "Cover Site",
+  description: "SerRat44's cover site showing off various styles and techniques.",
 };
 
 export default async function RootLayout({
