@@ -8,6 +8,8 @@ import {
   ScrollArea,
   Flex,
 } from "@mantine/core";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ProviderWrapper } from "@/components/ThemeConfig/ProviderWrapper";
 import { loadTheme, loadColorScheme } from "@/app/actions/theme";
 import { Header } from "@/components/layout/Header";
@@ -15,7 +17,8 @@ import { Footer } from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
   title: "Cover Site",
-  description: "SerRat44's cover site showing off various styles and techniques.",
+  description:
+    "SerRat44's cover site showing off various styles and techniques.",
 };
 
 export default async function RootLayout({
@@ -48,6 +51,8 @@ export default async function RootLayout({
             </Flex>
           </main>
         </ProviderWrapper>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
