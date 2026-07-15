@@ -7,15 +7,17 @@ import {
   Group,
   mergeThemeOverrides,
   createTheme,
+  ActionIcon,
+  HoverCard,
 } from "@mantine/core";
 import { useState } from "react";
 import { themeColorValues, type ThemeColorValues } from "@/types/theme";
 import { valueToLabel } from "@/utils";
 import { useThemeContext } from "@/components/themeConfig/ProviderWrapper";
+import { TbPalette } from "react-icons/tb";
+import { ColorTarget } from "@/types/theme";
 
-type ColorTarget = "primary" | "secondary";
-
-export function ColorPicker() {
+export function ColorSelect() {
   const { theme, updateTheme } = useThemeContext();
   const [selectedTarget, setSelectedTarget] = useState<ColorTarget>("primary");
 
@@ -76,5 +78,20 @@ export function ColorPicker() {
         </Group>
       </Chip.Group>
     </Flex>
+  );
+}
+
+export function ColorSelectButton() {
+  const [opened, setOpened] = useState(false);
+
+  return (
+    <HoverCard onOpen={() => setOpened(true)}>
+      <HoverCard.Target>
+        <ActionIcon variant="outline" size="lg">
+          <TbPalette size="94%" />
+        </ActionIcon>
+      </HoverCard.Target>
+      <HoverCard.Dropdown>{opened && <ColorSelect />}</HoverCard.Dropdown>
+    </HoverCard>
   );
 }

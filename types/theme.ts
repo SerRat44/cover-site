@@ -1,9 +1,6 @@
-import { createTheme, virtualColor } from "@mantine/core";
+import { createTheme } from "@mantine/core";
 
-export enum ThemeMode {
-  Light = "light",
-  Dark = "dark",
-}
+export type ColorTarget = "primary" | "secondary";
 
 export const themeColorValues = [
   "blue",
