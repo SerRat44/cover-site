@@ -5,24 +5,27 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "analyze": "cross-env ANALYZE=true next build --webpack"
   },
   "dependencies": {
     "@mantine/core": "^9.4.1",
     "@mantine/hooks": "^9.4.1",
     "@mantine/modals": "^9.4.1",
     "@mantine/notifications": "^9.4.1",
+    "@vercel/analytics": "^2",
+    "@vercel/speed-insights": "^2",
     "next": "16.2.10",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "react-icons": "^5.7.0",
-    "@vercel/speed-insights": "^2",
-    "@vercel/analytics": "^2"
+    "react-icons": "^5.7.0"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^16.2.10",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cross-env": "^10.1.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "postcss": "^8.5.18",

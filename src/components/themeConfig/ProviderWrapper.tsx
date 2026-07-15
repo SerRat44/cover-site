@@ -1,18 +1,24 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useState } from "react";
 import {
   MantineProvider,
   mergeThemeOverrides,
   type MantineThemeOverride,
+  type MantineColorScheme,
 } from "@mantine/core";
+import { saveTheme } from "@/app/actions/theme";
 import { defaultTheme } from "@/types/theme";
-
-const THEME_STORAGE_KEY = "app-theme";
 
 interface ThemeContextType {
   theme: MantineThemeOverride;
   updateTheme: (nextTheme: MantineThemeOverride) => void;
+}
+
+interface ProviderWrapperProps {
+  children: React.ReactNode;
+  initialTheme?: MantineThemeOverride;
+  initialColorScheme: Exclude<MantineColorScheme, "auto">;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -24,27 +30,24 @@ export const useThemeContext = () => {
   return context;
 };
 
-export function ProviderWrapper({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<MantineThemeOverride>(defaultTheme);
-
-  useEffect(() => {
-    const saved = localStorage.getItem(THEME_STORAGE_KEY);
-    if (saved) {
-      try {
-        setTheme(mergeThemeOverrides(defaultTheme, JSON.parse(saved)));
-      } catch {}
-    }
-  }, []);
+export function ProviderWrapper({
+  children,
+  initialTheme,
+  initialColorScheme,
+}: ProviderWrapperProps) {
+  const [theme, setTheme] = useState<MantineThemeOverride>(() =>
+    mergeThemeOverrides(defaultTheme, initialTheme ?? {}),
+  );
 
   const updateTheme = (nextTheme: MantineThemeOverride) => {
     const updated = mergeThemeOverrides(theme, nextTheme);
     setTheme(updated);
-    localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(updated));
+    void saveTheme(updated);
   };
 
   return (
     <ThemeContext.Provider value={{ theme, updateTheme }}>
-      <MantineProvider defaultColorScheme="dark" theme={theme}>
+      <MantineProvider defaultColorScheme={initialColorScheme} theme={theme}>
         {children}
       </MantineProvider>
     </ThemeContext.Provider>
