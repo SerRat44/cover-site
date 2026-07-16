@@ -11,25 +11,25 @@ import {
   mergeThemeOverrides,
   type MantineThemeOverride,
   type MantineColorScheme,
+  type CSSVariablesResolver,
 } from "@mantine/core";
-import { defaultTheme } from "@/types/user-settings";
+import { defaultTheme } from "@/components/userSettings/userSettingTypes";
 import {
   saveUserSettings,
-  type userSettingsProps,
+  type UserSettingsProps,
 } from "@/app/actions/userSettings";
-import type { NavbarTypes } from "@/types/user-settings";
 
-interface UserSettingsContextType {
+interface UserSettingsContextType extends UserSettingsProps {
   colorScheme: Exclude<MantineColorScheme, "auto">;
   theme: MantineThemeOverride;
-  navbarType: NavbarTypes;
+  sidebarActive: boolean;
   isSaving: boolean;
-  updateSettings: (updates: Partial<userSettingsProps>) => void;
+  updateSettings: (updates: Partial<UserSettingsProps>) => void;
 }
 
 interface UserSettingsProviderProps {
   children: React.ReactNode;
-  initialUserSettings: userSettingsProps;
+  initialUserSettings: UserSettingsProps;
 }
 
 const UserSettingsContext = createContext<UserSettingsContextType | undefined>(
@@ -46,6 +46,19 @@ export function useUserSettings() {
   return context;
 }
 
+const resolver: CSSVariablesResolver = (theme) => {
+  const secondaryColor = theme.other?.secondaryColor || "grape";
+  return {
+    variables: {},
+    light: {
+      "--mantine-color-default-border": `var(--mantine-color-${secondaryColor}-4)`,
+    },
+    dark: {
+      "--mantine-color-default-border": `var(--mantine-color-${secondaryColor}-8)`,
+    },
+  };
+};
+
 export function UserSettingsProvider({
   children,
   initialUserSettings,
@@ -54,19 +67,19 @@ export function UserSettingsProvider({
   const [colorScheme, setColorScheme] = useState<
     Exclude<MantineColorScheme, "auto">
   >(initialUserSettings.colorScheme);
-  const [navbarType, setNavbarType] = useState<NavbarTypes>(
-    initialUserSettings.navbarType,
+  const [sidebarActive, setSidebarActive] = useState<boolean>(
+    initialUserSettings.sidebarActive,
   );
   const [theme, setTheme] = useState<MantineThemeOverride>(() =>
     mergeThemeOverrides(defaultTheme, initialUserSettings.theme),
   );
 
-  const updateSettings = (updates: Partial<userSettingsProps>) => {
+  const updateSettings = (updates: Partial<UserSettingsProps>) => {
     if (updates.colorScheme !== undefined) {
       setColorScheme(updates.colorScheme);
     }
-    if (updates.navbarType !== undefined) {
-      setNavbarType(updates.navbarType);
+    if (updates.sidebarActive !== undefined) {
+      setSidebarActive(updates.sidebarActive);
     }
     if (updates.theme !== undefined) {
       setTheme((prevTheme) => mergeThemeOverrides(prevTheme, updates.theme!));
@@ -83,9 +96,13 @@ export function UserSettingsProvider({
 
   return (
     <UserSettingsContext.Provider
-      value={{ colorScheme, theme, navbarType, isSaving, updateSettings }}
+      value={{ colorScheme, theme, sidebarActive, isSaving, updateSettings }}
     >
-      <MantineProvider forceColorScheme={colorScheme} theme={theme}>
+      <MantineProvider
+        forceColorScheme={colorScheme}
+        theme={theme}
+        cssVariablesResolver={resolver}
+      >
         {children}
       </MantineProvider>
     </UserSettingsContext.Provider>

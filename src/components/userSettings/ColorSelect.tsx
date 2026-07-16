@@ -5,7 +5,7 @@ import {
   themeColorValues,
   ColorTarget,
   type ThemeColorValues,
-} from "@/types/user-settings";
+} from "@/components/userSettings/userSettingTypes";
 import {
   createTheme,
   Flex,
@@ -16,7 +16,10 @@ import {
 import { valueToLabel } from "@/utils";
 import { useUserSettings } from "./UserSettingsProvider";
 
-export default function ColorSelect() {
+export default function ColorSelect({
+  ref,
+  ...others
+}: React.ComponentProps<"div">) {
   const { theme, updateSettings } = useUserSettings();
   const [selectedTarget, setSelectedTarget] = useState<ColorTarget>("primary");
 
@@ -32,12 +35,11 @@ export default function ColorSelect() {
         : { other: { secondaryColor: nextColor } },
     );
 
-  
     updateSettings({ theme: themeUpdate });
   };
 
   return (
-    <Flex direction="column" gap="sm">
+    <Flex ref={ref} {...others} direction="column" gap="sm">
       <SegmentedControl
         fullWidth
         value={selectedTarget}

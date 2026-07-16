@@ -1,24 +1,52 @@
+"use client";
 
-import { Box, Flex, ActionIcon, Paper } from "@mantine/core";
-import { ThemeGroup } from "@/components/userSettings/ThemeGroup";
-import { TbLayoutSidebar, TbLayoutNavbar } from "react-icons/tb";
-import type { NavbarTypes } from "@/types/user-settings";
+import { Flex, Paper, Transition, ScrollArea } from "@mantine/core";
+import { useUserSettings } from "../userSettings/UserSettingsProvider";
+import { useStickyBounds } from "@/hooks/useStickyBounds";
 
-export function Sidebar({ selected, onToggle }: NavProps) {
+export function Sidebar() {
+  const { sidebarActive } = useUserSettings();
+  const { ref, ready } = useStickyBounds<HTMLDivElement>({
+    scrollContainerId: "app-scroll-viewport",
+    boundarySelector: "[data-app-footer]",
+  });
+
   return (
-    <Box className="sidebar-container">
-      <Paper className="sidebar-bar" radius="md" p="md">
+    <Transition
+      mounted={sidebarActive}
+      transition="slide-right"
+      duration={180}
+      timingFunction="linear"
+    >
+      {(transitionStyles) => (
         <Flex
-          direction="column"
-          justify="space-between"
-          align="center"
-          h="100%"
-          w="100%"
+          ref={ref}
+          miw="200px"
+          maw="240px"
+          w="20%"
+          ml={6}
+          style={{
+            ...transitionStyles,
+            position: "sticky",
+            top: 10,
+            alignSelf: "flex-start",
+            willChange: "height, opacity",
+            opacity: ready ? 1 : 0,
+            transition: "opacity 140ms ease",
+          }}
         >
-          <SwitchNavbarButton selected={selected} onToggle={onToggle} />
-          <ThemeGroup />
+          <Paper flex={1} className="sidebar-paper" radius="md">
+            <ScrollArea
+              flex={1}
+              scrollbars="y"
+              offsetScrollbars
+              scrollbarSize={6}
+            >
+              <Flex>{/* Sidebar content items go here */}</Flex>
+            </ScrollArea>
+          </Paper>
         </Flex>
-      </Paper>
-    </Box>
+      )}
+    </Transition>
   );
 }

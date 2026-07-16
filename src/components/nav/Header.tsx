@@ -1,21 +1,16 @@
-import { Box, Flex, ActionIcon, Paper } from "@mantine/core";
-import { ThemeGroup } from "@/components/userSettings/ThemeGroup";
-import { TbLayoutSidebar, TbLayoutNavbar } from "react-icons/tb";
-import type { NavbarTypes } from "@/types/user-settings";
+import { Box, Flex, Paper } from "@mantine/core";
+import { SidebarToggle } from "./SidebarToggle";
+import { ThemeGroup } from "../userSettings/ThemeGroup";
 
-export function Header({ selected, onToggle }: NavProps) {
+export function Header() {
   return (
-    <Box className="header-bar">
-      <Flex
-        px="md"
-        direction="row"
-        justify="space-between"
-        align="center"
-        h="100%"
-      >
-        <SwitchNavbarButton selected={selected} onToggle={onToggle} />
-        <ThemeGroup />
-      </Flex>
+    <Box>
+      <Paper className="header-paper">
+        <Flex direction="row" justify="space-between" align="center" p={8}>
+          <SidebarToggle />
+          <ThemeGroup />
+        </Flex>
+      </Paper>
     </Box>
   );
 }

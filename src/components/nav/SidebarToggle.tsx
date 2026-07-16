@@ -1,23 +1,22 @@
 "use client";
 
-import React from "react";
-import { Box, Flex, ActionIcon, Paper } from "@mantine/core";
-import { ThemeGroup } from "@/components/userSettings/ThemeGroup";
-import { TbLayoutSidebar, TbLayoutNavbar } from "react-icons/tb";
-import type { NavbarTypes } from "@/types/user-settings";
+import { ActionIcon } from "@mantine/core";
+import { TbLayoutSidebar, TbLayoutSidebarLeftCollapse } from "react-icons/tb";
+import { useUserSettings } from "../userSettings/UserSettingsProvider";
 
-interface NavProps {
-  selected: NavbarTypes;
-  onToggle: () => void;
-}
+export const SidebarToggle = () => {
+  const { sidebarActive, updateSettings } = useUserSettings();
 
-export const SwitchNavbarButton = ({ selected, onToggle }: NavProps) => {
+  const handleClick = () => {
+    updateSettings({ sidebarActive: !sidebarActive });
+  };
+
   return (
-    <ActionIcon onClick={onToggle} variant="subtle" size="lg">
-      {selected === "header" ? (
-        <TbLayoutSidebar size="96%" />
+    <ActionIcon onClick={handleClick} variant="subtle" size="lg">
+      {sidebarActive ? (
+        <TbLayoutSidebarLeftCollapse size="96%" />
       ) : (
-        <TbLayoutNavbar size="96%" />
+        <TbLayoutSidebar size="96%" />
       )}
     </ActionIcon>
   );

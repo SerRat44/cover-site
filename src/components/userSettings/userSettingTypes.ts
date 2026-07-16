@@ -17,8 +17,6 @@ export type ThemeColorValues = (typeof themeColorValues)[number];
 export const defaultTheme = createTheme({
   primaryColor: themeColorValues[0],
   other: {
-    secondaryColor: themeColorValues[1],
+    secondaryColor: themeColorValues[1] satisfies ThemeColorValues,
   },
 });
-
-export type NavbarTypes = "header" | "sidebar";

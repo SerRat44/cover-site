@@ -1,18 +1,18 @@
-import dynamic from "next/dynamic";
+"use client";
+
 import { ActionIcon, Popover } from "@mantine/core";
 import { TbPalette } from "react-icons/tb";
-
-const ColorSelect = dynamic(() => import("./ColorSelect"));
+import ColorSelect from "./ColorSelect";
 
 export function ColorSelectButton() {
   return (
-    <Popover withArrow>
+    <Popover>
       <Popover.Target>
         <ActionIcon variant="outline" size="lg">
           <TbPalette size="94%" />
         </ActionIcon>
       </Popover.Target>
-      <Popover.Dropdown>
+      <Popover.Dropdown className="color-select-popover">
         <ColorSelect />
       </Popover.Dropdown>
     </Popover>

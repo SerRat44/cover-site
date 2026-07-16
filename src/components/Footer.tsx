@@ -1,9 +1,11 @@
-import { Box, Text } from "@mantine/core";
+import { Box, Text, Paper } from "@mantine/core";
 
 export function Footer() {
   return (
-    <Box h={60}>
-      <Text>Test Footer!!!</Text>
+    <Box data-app-footer>
+      <Paper className="footer-paper">
+        <Text>Test Footer!!!</Text>
+      </Paper>
     </Box>
   );
 }

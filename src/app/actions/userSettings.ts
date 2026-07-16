@@ -3,12 +3,12 @@
 import { cookies } from "next/headers";
 import { cache } from "react";
 import type { MantineColorScheme, MantineThemeOverride } from "@mantine/core";
-import { defaultTheme, type NavbarTypes } from "@/types/user-settings";
+import { defaultTheme } from "@/components/userSettings/userSettingTypes";
 
-export interface userSettingsProps {
+export interface UserSettingsProps {
   colorScheme: Exclude<MantineColorScheme, "auto">;
   theme: MantineThemeOverride;
-  navbarType: NavbarTypes;
+  sidebarActive: boolean;
 }
 
 const USER_SETTINGS_COOKIE = "user-settings";
@@ -18,14 +18,14 @@ const COOKIE_OPTIONS = {
   maxAge: 60 * 60 * 24 * 365,
 };
 
-const DEFAULT_SETTINGS: userSettingsProps = {
+const DEFAULT_SETTINGS: UserSettingsProps = {
   colorScheme: "dark",
   theme: defaultTheme,
-  navbarType: "header",
+  sidebarActive: true,
 };
 
 export async function saveUserSettings(
-  newUserSettings: Partial<userSettingsProps>,
+  newUserSettings: Partial<UserSettingsProps>,
 ) {
   const cookieStore = await cookies();
 
@@ -37,7 +37,7 @@ export async function saveUserSettings(
     }
   } catch {}
 
-  const updatedSettings: userSettingsProps = {
+  const updatedSettings: UserSettingsProps = {
     ...currentSettings,
     ...newUserSettings,
   };
@@ -49,7 +49,7 @@ export async function saveUserSettings(
   );
 }
 
-export const loadUserSettings = cache(async (): Promise<userSettingsProps> => {
+export const loadUserSettings = cache(async (): Promise<UserSettingsProps> => {
   const cookieStore = await cookies();
   const rawData = cookieStore.get(USER_SETTINGS_COOKIE)?.value;
 
