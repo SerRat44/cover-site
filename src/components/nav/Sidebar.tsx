@@ -1,6 +1,6 @@
 "use client";
 
-import { Flex, Paper, Transition, ScrollArea } from "@mantine/core";
+import { Box, Flex, Paper, Transition, ScrollArea } from "@mantine/core";
 import { useUserSettings } from "../userSettings/UserSettingsProvider";
 import { useStickyBounds } from "@/hooks/useStickyBounds";
 
@@ -19,33 +19,34 @@ export function Sidebar() {
       timingFunction="linear"
     >
       {(transitionStyles) => (
-        <Flex
-          ref={ref}
-          miw="200px"
-          maw="240px"
-          w="20%"
-          ml={6}
-          style={{
-            ...transitionStyles,
-            position: "sticky",
-            top: 10,
-            alignSelf: "flex-start",
-            willChange: "height, opacity",
-            opacity: ready ? 1 : 0,
-            transition: "opacity 140ms ease",
-          }}
-        >
-          <Paper flex={1} className="sidebar-paper" radius="md">
-            <ScrollArea
-              flex={1}
-              scrollbars="y"
-              offsetScrollbars
-              scrollbarSize={6}
-            >
-              <Flex>{/* Sidebar content items go here */}</Flex>
-            </ScrollArea>
-          </Paper>
-        </Flex>
+        <Box style={transitionStyles}>
+          <Flex
+            ref={ref}
+            miw="200px"
+            maw="240px"
+            w="20%"
+            ml={6}
+            style={{
+              position: "sticky",
+              top: 10,
+              alignSelf: "flex-start",
+              willChange: "height, opacity",
+              opacity: ready ? 1 : 0,
+              transition: "opacity 140ms ease",
+            }}
+          >
+            <Paper flex={1} className="sidebar-paper" radius="md">
+              <ScrollArea
+                flex={1}
+                scrollbars="y"
+                offsetScrollbars
+                scrollbarSize={6}
+              >
+                <Flex>{/* Sidebar content items go here */}</Flex>
+              </ScrollArea>
+            </Paper>
+          </Flex>
+        </Box>
       )}
     </Transition>
   );
