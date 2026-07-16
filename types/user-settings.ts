@@ -20,3 +20,5 @@ export const defaultTheme = createTheme({
     secondaryColor: themeColorValues[1],
   },
 });
+
+export type NavbarTypes = "header" | "sidebar";

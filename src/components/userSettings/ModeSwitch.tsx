@@ -2,15 +2,20 @@
 
 import { useMantineColorScheme, Box, Switch } from "@mantine/core";
 import { TbMoon, TbSun } from "react-icons/tb";
-import { saveColorScheme } from "@/app/actions/theme";
+import { useUserSettings } from "./UserSettingsProvider"; // Updated Hook Path
 
 export function ModeSwitch() {
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const { toggleColorScheme } = useMantineColorScheme();
+  const { colorScheme, updateSettings } = useUserSettings();
 
   const handleToggle = () => {
-    const next = colorScheme === "dark" ? "light" : "dark";
+    const nextScheme = colorScheme === "dark" ? "light" : "dark";
+
+    // 1. Alert Mantine's internal state mechanism
     toggleColorScheme();
-    void saveColorScheme(next);
+
+    // 2. Alert our central tracking state which triggers the cookie Server Action
+    updateSettings({ colorScheme: nextScheme });
   };
 
   return (

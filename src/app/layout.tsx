@@ -5,10 +5,9 @@ import "./globals.css";
 import { ColorSchemeScript, mantineHtmlProps, Box } from "@mantine/core";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
-import { ProviderWrapper } from "@/components/themeConfig/ProviderWrapper";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { loadColorScheme, loadTheme } from "@/app/actions/theme";
+import { UserSettingsProvider } from "@/components/userSettings/UserSettingsProvider";
+import { LayoutShell } from "@/components/LayoutShell";
+import { loadUserSettings } from "@/app/actions/userSettings";
 
 export const metadata: Metadata = {
   title: "Cover Site",
@@ -19,29 +18,19 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const initialColorScheme = await loadColorScheme();
-  const initialTheme = await loadTheme();
+  const initialUserSettings = await loadUserSettings();
 
   return (
     <html lang="en" {...mantineHtmlProps}>
       <head>
-        <ColorSchemeScript defaultColorScheme={initialColorScheme} />
+        <ColorSchemeScript forceColorScheme={initialUserSettings.colorScheme} />
       </head>
       <body>
-        <ProviderWrapper
-          initialColorScheme={initialColorScheme}
-          initialTheme={initialTheme}
-        >
-          <main>
-            <Box className="main-root">
-              <Header />
-              <Box className="main-content">
-                {children}
-                <Footer />
-              </Box>
-            </Box>
-          </main>
-        </ProviderWrapper>
+        <UserSettingsProvider initialUserSettings={initialUserSettings}>
+          <Box className="base">
+            <LayoutShell>{children}</LayoutShell>
+          </Box>
+        </UserSettingsProvider>
         <Analytics />
         <SpeedInsights />
       </body>

@@ -1,6 +1,6 @@
 import { Group } from "@mantine/core";
-import { ModeSwitch } from "@/components/themeConfig/ModeSwitch";
-import { ColorSelectButton } from "@/components/themeConfig/ColorSelect";
+import { ModeSwitch } from "./ModeSwitch";
+import { ColorSelectButton } from "./ColorSelectButton";
 
 export function ThemeGroup() {
   return (
