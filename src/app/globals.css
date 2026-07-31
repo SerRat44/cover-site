@@ -108,13 +108,16 @@ main {
 
 .header {
   transition: border-color 150ms ease;
+  border-bottom-style: solid;
   border-bottom-width: 2px;
 }
 
 :root:not([data-right-paged="true"]) .sidebar {
+  border-right-style: solid;
   border-right-width: 2px;
 }
 
 :root[data-right-paged="true"] .sidebar {
+  border-left-style: solid;
   border-left-width: 2px;
 }
