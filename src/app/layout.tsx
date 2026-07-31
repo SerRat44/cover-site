@@ -12,7 +12,8 @@ import { UserSettingsProvider } from "@/components/userSettings/UserSettingsProv
 import { Header, LazySidebar } from "@/components/nav";
 import { Footer } from "@/components/Footer";
 import { loadUserSettings } from "@/app/actions/userSettings";
-import PartytownHead from "@/components/PartytownHead";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
   title: "Cover Site",
@@ -30,29 +31,6 @@ export default async function RootLayout({
   return (
     <html lang="en" {...mantineHtmlProps}>
       <head>
-        <PartytownHead />
-        <script
-          type="text/partytown"
-          dangerouslySetInnerHTML={{
-            __html: `window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };`,
-          }}
-        />
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-        <script
-          type="text/partytown"
-          src="https://cdn.vercel-insights.com/v1/script.js"
-        />
-        <script
-          type="text/partytown"
-          dangerouslySetInnerHTML={{
-            __html: `window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };`,
-          }}
-        />
-        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
-        <script
-          type="text/partytown"
-          src="https://static.vercel-insights.com/v1/script.js"
-        />
         <ColorSchemeScript defaultColorScheme="dark" />
       </head>
       <body>
@@ -77,6 +55,8 @@ export default async function RootLayout({
             </ScrollArea>
           </Flex>
         </UserSettingsProvider>
+        <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );

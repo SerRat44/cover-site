@@ -2,18 +2,18 @@
   "name": "cover-site",
   "private": true,
   "scripts": {
-    "partytown": "partytown copylib public/~partytown",
     "dev": "next dev",
-    "build": "npm run partytown && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
-    "@builder.io/partytown": "^0.10.3",
     "@mantine/core": "^9.4.1",
     "@mantine/hooks": "^9.4.1",
     "@mantine/modals": "^9.4.1",
     "@mantine/notifications": "^9.4.1",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "js-cookie": "^3.0.8",
     "next": "16.2.10",
     "react": "19.2.4",
