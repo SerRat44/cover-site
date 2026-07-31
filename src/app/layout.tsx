@@ -8,12 +8,11 @@ import {
   Flex,
   ScrollArea,
 } from "@mantine/core";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { UserSettingsProvider } from "@/components/userSettings/UserSettingsProvider";
-import { loadUserSettings } from "@/app/actions/userSettings";
-import { Header, Sidebar } from "@/components/nav";
+import { Header, LazySidebar } from "@/components/nav";
 import { Footer } from "@/components/Footer";
+import { loadUserSettings } from "@/app/actions/userSettings";
+import PartytownHead from "@/components/PartytownHead";
 
 export const metadata: Metadata = {
   title: "Cover Site",
@@ -23,16 +22,41 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
-  const initialUserSettings = await loadUserSettings();
+}: {
+  children: React.ReactNode;
+}) {
+  const settings = await loadUserSettings();
 
   return (
     <html lang="en" {...mantineHtmlProps}>
       <head>
-        <ColorSchemeScript forceColorScheme={initialUserSettings.colorScheme} />
+        <PartytownHead />
+        <script
+          type="text/partytown"
+          dangerouslySetInnerHTML={{
+            __html: `window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };`,
+          }}
+        />
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script
+          type="text/partytown"
+          src="https://cdn.vercel-insights.com/v1/script.js"
+        />
+        <script
+          type="text/partytown"
+          dangerouslySetInnerHTML={{
+            __html: `window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };`,
+          }}
+        />
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script
+          type="text/partytown"
+          src="https://static.vercel-insights.com/v1/script.js"
+        />
+        <ColorSchemeScript defaultColorScheme="dark" />
       </head>
       <body>
-        <UserSettingsProvider initialUserSettings={initialUserSettings}>
+        <UserSettingsProvider initialSettings={settings}>
           <Flex direction="column" h="100%" mah="100dvh">
             <Header />
             <ScrollArea
@@ -43,7 +67,7 @@ export default async function RootLayout({
             >
               <Flex direction="column">
                 <Flex direction="row">
-                  <Sidebar />
+                  <LazySidebar />
                   <Flex direction="column" p="md">
                     <main>{children}</main>
                   </Flex>
@@ -53,8 +77,6 @@ export default async function RootLayout({
             </ScrollArea>
           </Flex>
         </UserSettingsProvider>
-        <Analytics />
-        <SpeedInsights />
       </body>
     </html>
   );

@@ -3,39 +3,32 @@
 import { useState } from "react";
 import {
   themeColorValues,
-  ColorTarget,
+  type ColorTarget,
   type ThemeColorValues,
-} from "@/components/userSettings/userSettingTypes";
-import {
-  createTheme,
-  Flex,
-  Group,
-  SegmentedControl,
-  Chip,
-} from "@mantine/core";
-import { valueToLabel } from "@/utils";
+} from "@/lib/settingsShared";
+import { Flex, Group, SegmentedControl, Chip } from "@mantine/core";
+import { valueToLabel } from "@/lib/utils";
 import { useUserSettings } from "./UserSettingsProvider";
 
 export default function ColorSelect({
   ref,
   ...others
 }: React.ComponentProps<"div">) {
-  const { theme, updateSettings } = useUserSettings();
+  const { settings, updateSettings } = useUserSettings();
   const [selectedTarget, setSelectedTarget] = useState<ColorTarget>("primary");
 
-  const activeColor =
+  const activeColor = (
     selectedTarget === "primary"
-      ? (theme.primaryColor as ThemeColorValues)
-      : (theme.other?.secondaryColor as ThemeColorValues);
+      ? settings.primaryColor
+      : settings.secondaryColor
+  ) as ThemeColorValues;
 
   const handleSelect = (nextColor: ThemeColorValues) => {
-    const themeUpdate = createTheme(
+    updateSettings(
       selectedTarget === "primary"
         ? { primaryColor: nextColor }
-        : { other: { secondaryColor: nextColor } },
+        : { secondaryColor: nextColor },
     );
-
-    updateSettings({ theme: themeUpdate });
   };
 
   return (

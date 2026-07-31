@@ -1,27 +1,30 @@
 "use client";
 
-import { useMantineColorScheme, Box, Switch } from "@mantine/core";
+import { Switch, Box, useMantineColorScheme } from "@mantine/core";
 import { TbMoon, TbSun } from "react-icons/tb";
-import { useUserSettings } from "./UserSettingsProvider";
 
 export function ModeSwitch() {
   const { toggleColorScheme } = useMantineColorScheme();
-  const { colorScheme, updateSettings } = useUserSettings();
 
-  const handleToggle = () => {
-    const nextScheme = colorScheme === "dark" ? "light" : "dark";
-    toggleColorScheme();
-    updateSettings({ colorScheme: nextScheme });
+  const getColorScheme = () => {
+    if (typeof document === "undefined") return "light";
+    return (
+      document.documentElement.getAttribute("data-mantine-color-scheme") ||
+      "light"
+    );
   };
+
+  const currentScheme = getColorScheme();
+  const isLight = currentScheme === "light";
 
   return (
     <Box>
       <Switch
         size="lg"
-        checked={colorScheme === "dark"}
-        onLabel={<TbMoon size="94%" />}
-        offLabel={<TbSun size="94%" />}
-        onChange={handleToggle}
+        checked={isLight}
+        onChange={toggleColorScheme}
+        onLabel={<TbSun size="94%" />}
+        offLabel={<TbMoon size="94%" />}
       />
     </Box>
   );

@@ -5,15 +5,15 @@ import { TbLayoutSidebar, TbLayoutSidebarLeftCollapse } from "react-icons/tb";
 import { useUserSettings } from "../userSettings/UserSettingsProvider";
 
 export const SidebarToggle = () => {
-  const { sidebarActive, updateSettings } = useUserSettings();
+  const { settings, updateSettings } = useUserSettings();
 
   const handleClick = () => {
-    updateSettings({ sidebarActive: !sidebarActive });
+    updateSettings({ sidebarCollapsed: !settings.sidebarCollapsed });
   };
 
   return (
     <ActionIcon onClick={handleClick} variant="subtle" size="lg">
-      {sidebarActive ? (
+      {!settings.sidebarCollapsed ? (
         <TbLayoutSidebarLeftCollapse size="96%" />
       ) : (
         <TbLayoutSidebar size="96%" />

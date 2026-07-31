@@ -1,4 +1,4 @@
-html,
+:root,
 body,
 main {
   width: 100dvw;
@@ -20,18 +20,16 @@ main {
 }
 
 .header-paper {
-  border-bottom: 1px solid var(--mantine-color-default-border);
   border-radius: 0;
-}
-
-.footer-paper {
-  border-radius: 0;
+  border-bottom: 2px solid var(--mantine-color-secondary-2);
+  @mixin dark {
+    border-bottom: 2px solid var(--mantine-color-secondary-8);
+  }
 }
 
 .sidebar-paper {
-  border: 1px solid var(--mantine-color-default-border);
-}
-
-.color-select-popover {
-  border: 1px solid var(--mantine-color-default-border);
+  border: 2px solid var(--mantine-color-secondary-2);
+  @mixin dark {
+    border: 2px solid var(--mantine-color-secondary-8);
+  }
 }

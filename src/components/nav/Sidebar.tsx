@@ -5,7 +5,7 @@ import { useUserSettings } from "../userSettings/UserSettingsProvider";
 import { useStickyBounds } from "@/hooks/useStickyBounds";
 
 export function Sidebar() {
-  const { sidebarActive } = useUserSettings();
+  const { settings } = useUserSettings();
   const { ref, ready } = useStickyBounds<HTMLDivElement>({
     scrollContainerId: "app-scroll-viewport",
     boundarySelector: "[data-app-footer]",
@@ -13,13 +13,13 @@ export function Sidebar() {
 
   return (
     <Transition
-      mounted={sidebarActive}
+      mounted={!settings.sidebarCollapsed}
       transition="slide-right"
       duration={180}
       timingFunction="linear"
     >
       {(transitionStyles) => (
-        <Box style={transitionStyles}>
+        <Box className="app-sidebar" style={transitionStyles}>
           <Flex
             ref={ref}
             miw="200px"

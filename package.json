@@ -2,26 +2,26 @@
   "name": "cover-site",
   "private": true,
   "scripts": {
+    "partytown": "partytown copylib public/~partytown",
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run partytown && next build",
     "start": "next start",
-    "lint": "eslint",
-    "analyze": "cross-env ANALYZE=true next build --webpack"
+    "lint": "eslint"
   },
   "dependencies": {
+    "@builder.io/partytown": "^0.10.3",
     "@mantine/core": "^9.4.1",
     "@mantine/hooks": "^9.4.1",
     "@mantine/modals": "^9.4.1",
     "@mantine/notifications": "^9.4.1",
-    "@vercel/analytics": "^2",
-    "@vercel/speed-insights": "^2",
+    "js-cookie": "^3.0.8",
     "next": "16.2.10",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-icons": "^5.7.0"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "^16.2.10",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -32,5 +32,9 @@
     "postcss-preset-mantine": "^1.18.0",
     "postcss-simple-vars": "^7.0.1",
     "typescript": "^5"
+  },
+  "allowScripts": {
+    "sharp@0.34.5": true,
+    "unrs-resolver@1.12.2": true
   }
 }

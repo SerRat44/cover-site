@@ -3,33 +3,18 @@
 import React, {
   createContext,
   useContext,
+  useMemo,
   useState,
   useTransition,
 } from "react";
-import {
-  MantineProvider,
-  mergeThemeOverrides,
-  type MantineThemeOverride,
-  type MantineColorScheme,
-  type CSSVariablesResolver,
-} from "@mantine/core";
-import { defaultTheme } from "@/components/userSettings/userSettingTypes";
-import {
-  saveUserSettings,
-  type UserSettingsProps,
-} from "@/app/actions/userSettings";
+import { DEFAULT_THEME, MantineProvider, createTheme } from "@mantine/core";
+import { DEFAULT_SETTINGS, UserSettingsProps } from "@/lib/settingsShared";
+import { saveUserSettings } from "@/app/actions/userSettings";
 
-interface UserSettingsContextType extends UserSettingsProps {
-  colorScheme: Exclude<MantineColorScheme, "auto">;
-  theme: MantineThemeOverride;
-  sidebarActive: boolean;
+interface UserSettingsContextType {
+  settings: UserSettingsProps;
   isSaving: boolean;
   updateSettings: (updates: Partial<UserSettingsProps>) => void;
-}
-
-interface UserSettingsProviderProps {
-  children: React.ReactNode;
-  initialUserSettings: UserSettingsProps;
 }
 
 const UserSettingsContext = createContext<UserSettingsContextType | undefined>(
@@ -38,71 +23,73 @@ const UserSettingsContext = createContext<UserSettingsContextType | undefined>(
 
 export function useUserSettings() {
   const context = useContext(UserSettingsContext);
+
   if (!context) {
     throw new Error(
       "useUserSettings must be used within a UserSettingsProvider",
     );
   }
+
   return context;
 }
 
-const resolver: CSSVariablesResolver = (theme) => {
-  const secondaryColor = theme.other?.secondaryColor || "grape";
-  return {
-    variables: {},
-    light: {
-      "--mantine-color-default-border": `var(--mantine-color-${secondaryColor}-4)`,
-    },
-    dark: {
-      "--mantine-color-default-border": `var(--mantine-color-${secondaryColor}-8)`,
-    },
-  };
-};
-
 export function UserSettingsProvider({
   children,
-  initialUserSettings,
-}: UserSettingsProviderProps) {
+  initialSettings = DEFAULT_SETTINGS,
+}: {
+  children: React.ReactNode;
+  initialSettings?: UserSettingsProps;
+}) {
+  const [settings, setSettings] = useState(initialSettings);
   const [isSaving, startTransition] = useTransition();
-  const [colorScheme, setColorScheme] = useState<
-    Exclude<MantineColorScheme, "auto">
-  >(initialUserSettings.colorScheme);
-  const [sidebarActive, setSidebarActive] = useState<boolean>(
-    initialUserSettings.sidebarActive,
-  );
-  const [theme, setTheme] = useState<MantineThemeOverride>(() =>
-    mergeThemeOverrides(defaultTheme, initialUserSettings.theme),
-  );
+
+  const theme = useMemo(() => {
+    return createTheme({
+      primaryColor: settings.primaryColor,
+      colors: {
+        primary:
+          DEFAULT_THEME.colors[
+            settings.primaryColor as keyof typeof DEFAULT_THEME.colors
+          ],
+        secondary:
+          DEFAULT_THEME.colors[
+            settings.secondaryColor as keyof typeof DEFAULT_THEME.colors
+          ],
+      },
+    });
+  }, [settings.primaryColor, settings.secondaryColor]);
 
   const updateSettings = (updates: Partial<UserSettingsProps>) => {
-    if (updates.colorScheme !== undefined) {
-      setColorScheme(updates.colorScheme);
+    setSettings((prev) => ({
+      ...prev,
+      ...updates,
+    }));
+
+    if ("sidebarCollapsed" in updates) {
+      document.documentElement.dataset.sidebarCollapsed =
+        updates.sidebarCollapsed ? "false" : "true";
     }
-    if (updates.sidebarActive !== undefined) {
-      setSidebarActive(updates.sidebarActive);
+    if ("primaryColor" in updates && updates.primaryColor) {
+      document.documentElement.dataset.primaryColor = updates.primaryColor;
     }
-    if (updates.theme !== undefined) {
-      setTheme((prevTheme) => mergeThemeOverrides(prevTheme, updates.theme!));
+    if ("secondaryColor" in updates && updates.secondaryColor) {
+      document.documentElement.dataset.secondaryColor = updates.secondaryColor;
     }
 
-    startTransition(async () => {
-      try {
-        await saveUserSettings(updates);
-      } catch (error) {
-        console.error("Failed to persist user settings to cookies:", error);
-      }
+    startTransition(() => {
+      saveUserSettings(updates);
     });
   };
 
   return (
     <UserSettingsContext.Provider
-      value={{ colorScheme, theme, sidebarActive, isSaving, updateSettings }}
+      value={{
+        settings,
+        isSaving,
+        updateSettings,
+      }}
     >
-      <MantineProvider
-        forceColorScheme={colorScheme}
-        theme={theme}
-        cssVariablesResolver={resolver}
-      >
+      <MantineProvider defaultColorScheme="dark" theme={theme}>
         {children}
       </MantineProvider>
     </UserSettingsContext.Provider>
