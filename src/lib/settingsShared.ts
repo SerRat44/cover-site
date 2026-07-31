@@ -1,5 +1,4 @@
 export const USER_SETTINGS_COOKIE = "user-settings";
-export const COLOR_SCHEME_COOKIE = "color-scheme";
 
 export const COOKIE_MAX_AGE = 60 * 60 * 24 * 365;
 
@@ -7,12 +6,14 @@ export interface UserSettingsProps {
   primaryColor: string;
   secondaryColor: string;
   sidebarCollapsed: boolean;
+  rightPaged: boolean;
 }
 
 export const DEFAULT_SETTINGS: UserSettingsProps = {
   primaryColor: "pink",
   secondaryColor: "grape",
   sidebarCollapsed: true,
+  rightPaged: true,
 };
 
 export const themeColorValues = [

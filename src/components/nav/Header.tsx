@@ -1,16 +1,32 @@
-import { Box, Flex, Paper } from "@mantine/core";
+import { Flex, Group } from "@mantine/core";
 import { SidebarToggle } from "./SidebarToggle";
-import { ThemeGroup } from "../userSettings/ThemeGroup";
+import cs from "clsx";
+import {
+  ModeToggle,
+  ColorSelectButton,
+  OrientationToggle,
+} from "@/components/userSettings";
 
 export function Header() {
   return (
-    <Box id="app-header">
-      <Paper className="header-paper" radius={0}>
-        <Flex direction="row" justify="space-between" align="center" p="xs">
-          <SidebarToggle />
-          <ThemeGroup />
-        </Flex>
-      </Paper>
-    </Box>
+    <Flex
+      justify="space-between"
+      align="center"
+      p="sm"
+      className="header paper orientation"
+    >
+      <SidebarToggle />
+      <Group
+        className="orientation"
+        gap="sm"
+        w="min"
+        align="center"
+        justify="center"
+      >
+        <OrientationToggle />
+        <ColorSelectButton />
+        <ModeToggle />
+      </Group>
+    </Flex>
   );
 }

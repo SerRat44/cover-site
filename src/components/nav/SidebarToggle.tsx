@@ -1,8 +1,13 @@
 "use client";
 
 import { ActionIcon } from "@mantine/core";
-import { TbLayoutSidebar, TbLayoutSidebarLeftCollapse } from "react-icons/tb";
-import { useUserSettings } from "../userSettings/UserSettingsProvider";
+import {
+  TbLayoutSidebar,
+  TbLayoutSidebarLeftCollapse,
+  TbLayoutSidebarRight,
+  TbLayoutSidebarRightCollapse,
+} from "react-icons/tb";
+import { useUserSettings } from "@/components/userSettings";
 
 export const SidebarToggle = () => {
   const { settings, updateSettings } = useUserSettings();
@@ -11,6 +16,14 @@ export const SidebarToggle = () => {
     updateSettings({ sidebarCollapsed: !settings.sidebarCollapsed });
   };
 
+  const Icon = settings.sidebarCollapsed
+    ? settings.rightPaged
+      ? TbLayoutSidebarRight
+      : TbLayoutSidebar
+    : settings.rightPaged
+      ? TbLayoutSidebarRightCollapse
+      : TbLayoutSidebarLeftCollapse;
+
   return (
     <ActionIcon
       onClick={handleClick}
@@ -18,11 +31,7 @@ export const SidebarToggle = () => {
       size="lg"
       aria-label="Toggle sidebar"
     >
-      {!settings.sidebarCollapsed ? (
-        <TbLayoutSidebarLeftCollapse size="94%" />
-      ) : (
-        <TbLayoutSidebar size="92%" />
-      )}
+      <Icon className="icon" />
     </ActionIcon>
   );
 };

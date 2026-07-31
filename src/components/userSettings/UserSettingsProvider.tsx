@@ -6,6 +6,7 @@ import React, {
   useMemo,
   useState,
   useTransition,
+  useEffect,
 } from "react";
 import { DEFAULT_THEME, MantineProvider, createTheme } from "@mantine/core";
 import { DEFAULT_SETTINGS, UserSettingsProps } from "@/lib/settingsShared";
@@ -23,14 +24,27 @@ const UserSettingsContext = createContext<UserSettingsContextType | undefined>(
 
 export function useUserSettings() {
   const context = useContext(UserSettingsContext);
-
   if (!context) {
     throw new Error(
       "useUserSettings must be used within a UserSettingsProvider",
     );
   }
-
   return context;
+}
+
+function syncHtmlDataset(settings: UserSettingsProps) {
+  if (typeof document === "undefined") return;
+  const root = document.documentElement;
+
+  root.dataset.sidebarCollapsed = String(Boolean(settings.sidebarCollapsed));
+  root.dataset.rightPaged = String(Boolean(settings.rightPaged));
+
+  if (settings.primaryColor) {
+    root.dataset.primaryColor = settings.primaryColor;
+  }
+  if (settings.secondaryColor) {
+    root.dataset.secondaryColor = settings.secondaryColor;
+  }
 }
 
 export function UserSettingsProvider({
@@ -42,6 +56,10 @@ export function UserSettingsProvider({
 }) {
   const [settings, setSettings] = useState(initialSettings);
   const [isSaving, startTransition] = useTransition();
+
+  useEffect(() => {
+    syncHtmlDataset(settings);
+  }, [settings]);
 
   const theme = useMemo(() => {
     return createTheme({
@@ -60,21 +78,11 @@ export function UserSettingsProvider({
   }, [settings.primaryColor, settings.secondaryColor]);
 
   const updateSettings = (updates: Partial<UserSettingsProps>) => {
-    setSettings((prev) => ({
-      ...prev,
-      ...updates,
-    }));
-
-    if ("sidebarCollapsed" in updates) {
-      document.documentElement.dataset.sidebarCollapsed =
-        updates.sidebarCollapsed ? "false" : "true";
-    }
-    if ("primaryColor" in updates && updates.primaryColor) {
-      document.documentElement.dataset.primaryColor = updates.primaryColor;
-    }
-    if ("secondaryColor" in updates && updates.secondaryColor) {
-      document.documentElement.dataset.secondaryColor = updates.secondaryColor;
-    }
+    setSettings((prev) => {
+      const next = { ...prev, ...updates };
+      syncHtmlDataset(next);
+      return next;
+    });
 
     startTransition(() => {
       saveUserSettings(updates);
