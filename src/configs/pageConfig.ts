@@ -1,11 +1,6 @@
-interface PageConfigProps {
-  name: string;
-  route: string;
-}
+export const pageConfig = [
+  { name: "home", route: "/" },
+  { name: "e-commerce", route: "e-commerce" },
+] as const;
 
-export const pageConfig = (): readonly PageConfigProps[] => {
-  return [
-    { name: "home", route: "/" },
-    { name: "e-commerce", route: "e-commerce" },
-  ];
-};
+export type PageConfigProps = (typeof pageConfig)[number];
