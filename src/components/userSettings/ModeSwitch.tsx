@@ -9,13 +9,13 @@ export function ModeSwitch() {
   return (
     <ActionIcon
       onClick={toggleColorScheme}
-      variant="outline"
+      variant="subtle"
       size="lg"
       aria-label="Toggle color scheme"
     >
-      <TbMoon className="mantine-light-hidden" size="92%" />
+      <TbSun className="mantine-light-hidden" size="92%" />
 
-      <TbSun className="mantine-dark-hidden" size="92%" />
+      <TbMoon className="mantine-dark-hidden" size="92%" />
     </ActionIcon>
   );
 }

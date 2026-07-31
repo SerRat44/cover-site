@@ -8,7 +8,7 @@ export function ColorSelectButton() {
   return (
     <Popover>
       <Popover.Target>
-        <ActionIcon variant="subtle" size="lg">
+        <ActionIcon variant="filled" size="lg">
           <TbPalette size="92%" />
         </ActionIcon>
       </Popover.Target>
