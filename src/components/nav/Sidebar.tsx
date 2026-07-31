@@ -1,53 +1,37 @@
+// components/nav/Sidebar.tsx
 "use client";
 
-import { Box, Flex, Paper, Transition, ScrollArea } from "@mantine/core";
+import { Box, Paper, ScrollArea } from "@mantine/core";
 import { useUserSettings } from "../userSettings/UserSettingsProvider";
 import { useStickyBounds } from "@/hooks/useStickyBounds";
 
 export function Sidebar() {
   const { settings } = useUserSettings();
-  const { ref, ready } = useStickyBounds<HTMLDivElement>({
-    scrollContainerId: "app-scroll-viewport",
-    boundarySelector: "[data-app-footer]",
+
+  const { targetRef } = useStickyBounds<HTMLDivElement>({
+    topBoundarySelector: "#app-header",
+    bottomBoundarySelector: "#app-footer",
   });
 
   return (
-    <Transition
-      mounted={!settings.sidebarCollapsed}
-      transition="slide-right"
-      duration={180}
-      timingFunction="linear"
+    <Box
+      ref={targetRef}
+      component="aside"
+      className="sidebar"
+      data-collapsed={settings.sidebarCollapsed}
     >
-      {(transitionStyles) => (
-        <Box className="app-sidebar" style={transitionStyles}>
-          <Flex
-            ref={ref}
-            miw="200px"
-            maw="240px"
-            w="20%"
-            ml={6}
-            style={{
-              position: "sticky",
-              top: 10,
-              alignSelf: "flex-start",
-              willChange: "height, opacity",
-              opacity: ready ? 1 : 0,
-              transition: "opacity 140ms ease",
-            }}
+      <Box className="sidebar-inner">
+        <Paper h="100%" radius={0} className="sidebar-paper">
+          <ScrollArea
+            h="100%"
+            scrollbars="y"
+            offsetScrollbars
+            scrollbarSize={6}
           >
-            <Paper flex={1} className="sidebar-paper" radius="md">
-              <ScrollArea
-                flex={1}
-                scrollbars="y"
-                offsetScrollbars
-                scrollbarSize={6}
-              >
-                <Flex>{/* Sidebar content items go here */}</Flex>
-              </ScrollArea>
-            </Paper>
-          </Flex>
-        </Box>
-      )}
-    </Transition>
+            <Box p="sm">{/* Sidebar Navigation */}</Box>
+          </ScrollArea>
+        </Paper>
+      </Box>
+    </Box>
   );
 }

@@ -8,8 +8,8 @@ export function ColorSelectButton() {
   return (
     <Popover>
       <Popover.Target>
-        <ActionIcon variant="outline" size="lg">
-          <TbPalette size="94%" />
+        <ActionIcon variant="subtle" size="lg">
+          <TbPalette size="92%" />
         </ActionIcon>
       </Popover.Target>
       <Popover.Dropdown className="color-select-popover">

@@ -1,89 +1,109 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useCallback } from "react";
 
 interface UseStickyBoundsOptions {
-  scrollContainerId: string;
-  boundarySelector: string;
-  gap?: number;
+  topBoundarySelector?: string;
+  bottomBoundarySelector?: string;
 }
 
-export function useStickyBounds<T extends HTMLElement>({
-  scrollContainerId,
-  boundarySelector,
-  gap = 10,
-}: UseStickyBoundsOptions) {
-  const nodeRef = useRef<T | null>(null);
-  const tickingRef = useRef(false);
-  const [ready, setReady] = useState(false);
+export function useStickyBounds<T extends HTMLElement = HTMLDivElement>({
+  topBoundarySelector,
+  bottomBoundarySelector,
+}: UseStickyBoundsOptions = {}) {
+  const targetRef = useRef<T | null>(null);
+  const rafId = useRef<number | null>(null);
 
-  const getScrollEl = useCallback(
-    () =>
-      document
-        .getElementById(scrollContainerId)
-        ?.querySelector(".mantine-ScrollArea-viewport") as HTMLElement | null,
-    [scrollContainerId],
-  );
+  const updateBounds = useCallback(() => {
+    if (rafId.current !== null) return;
 
-  const recalc = useCallback(() => {
-    const el = nodeRef.current;
-    const scrollEl = getScrollEl();
-    if (!el || !scrollEl) return false;
+    rafId.current = requestAnimationFrame(() => {
+      rafId.current = null;
+      const target = targetRef.current;
+      if (!target) return;
 
-    const containerRect = scrollEl.getBoundingClientRect();
-    const boundary = document.querySelector(boundarySelector);
-    const boundaryTop =
-      boundary?.getBoundingClientRect().top ?? containerRect.bottom;
+      const scrollParent = getScrollParent(target);
+      const parentRect = scrollParent
+        ? scrollParent.getBoundingClientRect()
+        : { top: 0, bottom: window.innerHeight, height: window.innerHeight };
 
-    const available =
-      Math.min(containerRect.height, boundaryTop - containerRect.top) - gap * 2;
-    el.style.height = `${Math.max(available, 100)}px`;
-    return true;
-  }, [getScrollEl, boundarySelector, gap]);
+      const targetRect = target.getBoundingClientRect();
 
-  const onScroll = useCallback(() => {
-    if (tickingRef.current) return;
-    tickingRef.current = true;
-    requestAnimationFrame(() => {
-      recalc();
-      tickingRef.current = false;
+      let topOffset = 0;
+      if (topBoundarySelector) {
+        const topEl = document.querySelector(topBoundarySelector);
+        if (topEl) {
+          const topRect = topEl.getBoundingClientRect();
+          const headerBottom = topRect.bottom - parentRect.top;
+          topOffset = Math.max(0, headerBottom);
+        }
+      }
+
+      const viewportHeight = scrollParent
+        ? scrollParent.clientHeight
+        : window.innerHeight;
+
+      let maxAvailableHeight = viewportHeight - topOffset;
+
+      if (bottomBoundarySelector) {
+        const bottomEl = document.querySelector(bottomBoundarySelector);
+        if (bottomEl) {
+          const bottomRect = bottomEl.getBoundingClientRect();
+          const spaceToFooter = bottomRect.top - targetRect.top;
+          maxAvailableHeight = Math.min(maxAvailableHeight, spaceToFooter);
+        }
+      }
+
+      const safeHeight = Math.max(0, maxAvailableHeight);
+
+      target.style.setProperty("--sticky-top", `${topOffset}px`);
+      target.style.setProperty("--sticky-height", `${safeHeight}px`);
     });
-  }, [recalc]);
+  }, [topBoundarySelector, bottomBoundarySelector]);
 
   useEffect(() => {
-    const scrollEl = getScrollEl();
-    const boundaryEl = document.querySelector(boundarySelector);
-    if (!scrollEl) return;
+    const target = targetRef.current;
+    if (!target) return;
 
-    const ro = new ResizeObserver(recalc);
-    ro.observe(scrollEl);
-    if (boundaryEl) ro.observe(boundaryEl);
+    const scrollParent = getScrollParent(target) || window;
 
-    scrollEl.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    updateBounds();
+    const timer = setTimeout(updateBounds, 50);
+
+    const resizeObserver = new ResizeObserver(updateBounds);
+    resizeObserver.observe(target);
+    resizeObserver.observe(document.body);
+
+    scrollParent.addEventListener("scroll", updateBounds, { passive: true });
+    window.addEventListener("resize", updateBounds);
 
     return () => {
-      ro.disconnect();
-      scrollEl.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      clearTimeout(timer);
+      if (rafId.current !== null) cancelAnimationFrame(rafId.current);
+      resizeObserver.disconnect();
+      scrollParent.removeEventListener("scroll", updateBounds);
+      window.removeEventListener("resize", updateBounds);
     };
-  }, [getScrollEl, boundarySelector, recalc, onScroll]);
+  }, [updateBounds]);
 
-  const setNodeRef = useCallback(
-    (node: T | null) => {
-      nodeRef.current = node;
-      if (node) {
-        recalc();
-        requestAnimationFrame(() => {
-          const ok = recalc();
-          if (ok) setReady(true);
-        });
-      } else {
-        setReady(false);
-      }
-    },
-    [recalc],
-  );
+  return { targetRef };
+}
 
-  return { ref: setNodeRef, ready };
+function getScrollParent(node: HTMLElement | null): HTMLElement | null {
+  if (!node || node === document.body) return null;
+
+  if (node.classList.contains("mantine-ScrollArea-viewport")) {
+    return node;
+  }
+
+  const computedStyle = window.getComputedStyle(node);
+  const overflowY = computedStyle.overflowY;
+  const isScrollable =
+    overflowY === "auto" || overflowY === "scroll" || overflowY === "overlay";
+
+  if (isScrollable && node.scrollHeight > node.clientHeight) {
+    return node;
+  }
+
+  return getScrollParent(node.parentElement);
 }

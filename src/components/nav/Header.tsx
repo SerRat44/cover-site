@@ -4,9 +4,9 @@ import { ThemeGroup } from "../userSettings/ThemeGroup";
 
 export function Header() {
   return (
-    <Box>
-      <Paper className="header-paper">
-        <Flex direction="row" justify="space-between" align="center" p={8}>
+    <Box id="app-header">
+      <Paper className="header-paper" radius={0}>
+        <Flex direction="row" justify="space-between" align="center" p="xs">
           <SidebarToggle />
           <ThemeGroup />
         </Flex>

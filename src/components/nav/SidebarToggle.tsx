@@ -12,11 +12,16 @@ export const SidebarToggle = () => {
   };
 
   return (
-    <ActionIcon onClick={handleClick} variant="subtle" size="lg">
+    <ActionIcon
+      onClick={handleClick}
+      variant="subtle"
+      size="lg"
+      aria-label="Toggle sidebar"
+    >
       {!settings.sidebarCollapsed ? (
-        <TbLayoutSidebarLeftCollapse size="96%" />
+        <TbLayoutSidebarLeftCollapse size="94%" />
       ) : (
-        <TbLayoutSidebar size="96%" />
+        <TbLayoutSidebar size="92%" />
       )}
     </ActionIcon>
   );

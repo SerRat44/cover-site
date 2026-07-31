@@ -1,3 +1,3 @@
 export { Header } from "./Header";
-export { LazySidebar } from "./LazySidebar";
+export { Sidebar } from "./Sidebar";
 export { SidebarToggle } from "./SidebarToggle";
