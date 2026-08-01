@@ -1,6 +1,7 @@
+/* reset */
 :root,
 body {
-  width: 100%;
+  width: 100dvw;
   height: 100dvh;
   margin: 0;
   padding: 0;
@@ -9,26 +10,63 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-:root[data-mantine-color-scheme="light"] body {
-  background-color: var(--mantine-color-gray-1);
+/* background colors */
+body,
+.main-bg,
+.front-bg,
+.back-bg {
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease;
 }
 
-:root[data-mantine-color-scheme="dark"] body {
+:root[data-mantine-color-scheme="light"] body,
+.main-bg,
+.front-bg,
+.back-bg {
+  border-color: var(--mantine-color-secondary-5);
+}
+
+:root[data-mantine-color-scheme="dark"] body,
+.main-bg,
+.front-bg,
+.back-bg {
+  border-color: var(--mantine-color-secondary-8);
+}
+
+:root[data-mantine-color-scheme="light"] body,
+.main-bg {
+  background-color: var(--mantine-color-gray-2);
+}
+
+:root[data-mantine-color-scheme="dark"] body,
+.main-bg {
   background-color: var(--mantine-color-dark-6);
 }
 
-main {
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  flex: 1;
+:root[data-mantine-color-scheme="light"] .front-bg {
+  background-color: var(--mantine-color-gray-4);
 }
 
+:root[data-mantine-color-scheme="dark"] .front-bg {
+  background-color: var(--mantine-color-dark-5);
+}
+
+:root[data-mantine-color-scheme="light"] .back-bg {
+  background-color: var(--mantine-color-white);
+}
+
+:root[data-mantine-color-scheme="dark"] .back-bg {
+  background-color: var(--mantine-color-dark-8);
+}
+
+/* icon class */
 .icon {
   width: 92%;
   height: 92%;
 }
 
+/* dark/light hidden */
 :root[data-mantine-color-scheme="dark"] .dark-only {
   display: block;
 }
@@ -43,6 +81,7 @@ main {
   display: none;
 }
 
+/* left/right orientation/scrollarea */
 :root:not([data-right-paged="true"]) .orientation {
   flex-direction: row;
 }
@@ -59,6 +98,7 @@ main {
   direction: ltr;
 }
 
+/* sidebar styles */
 .sidebar {
   flex-shrink: 0;
   position: sticky;
@@ -73,7 +113,7 @@ main {
 
 :root[data-sidebar-collapsed="false"] .sidebar,
 :root:not([data-sidebar-collapsed]) .sidebar {
-  width: clamp(200px, 20vw, 280px);
+  width: clamp(180px, 20vw, 280px);
   transform: translateX(0);
   opacity: 1;
 }
@@ -90,24 +130,8 @@ main {
   opacity: 0;
 }
 
-.paper {
-  transition:
-    background-color 150ms ease,
-    border-color 150ms ease;
-}
-
-:root[data-mantine-color-scheme="light"] .paper {
-  background-color: var(--mantine-color-gray-3);
-  border-color: var(--mantine-color-secondary-5);
-}
-
-:root[data-mantine-color-scheme="dark"] .paper {
-  background-color: var(--mantine-color-dark-5);
-  border-color: var(--mantine-color-secondary-8);
-}
-
+/* border style/width */
 .header {
-  transition: border-color 150ms ease;
   border-bottom-style: solid;
   border-bottom-width: 2px;
 }

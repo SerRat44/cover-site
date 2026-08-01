@@ -10,13 +10,14 @@ export function ColorSelectButton() {
       <Popover.Target>
         <ActionIcon
           variant="filled"
-          size="lg"
           aria-label="Toggle theme customization"
+          h="100%"
+          w="auto"
         >
           <TbPalette className="icon" />
         </ActionIcon>
       </Popover.Target>
-      <Popover.Dropdown>
+      <Popover.Dropdown className="front-bg">
         <ColorSelect />
       </Popover.Dropdown>
     </Popover>

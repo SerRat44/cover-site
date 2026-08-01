@@ -28,8 +28,9 @@ export const SidebarToggle = () => {
     <ActionIcon
       onClick={handleClick}
       variant="subtle"
-      size="lg"
       aria-label="Toggle sidebar"
+      h="100%"
+      w="auto"
     >
       <Icon className="icon" />
     </ActionIcon>

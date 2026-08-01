@@ -17,8 +17,9 @@ export function OrientationToggle() {
     <ActionIcon
       onClick={handleClick}
       variant="transparent"
-      size="lg"
       aria-label="Toggle page orientation"
+      h="100%"
+      w="auto"
     >
       <Icon className="icon" />
     </ActionIcon>

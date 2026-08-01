@@ -51,6 +51,7 @@ export default function ColorSelect({
         <Group
           gap="xs"
           wrap="wrap"
+          miw="320"
           maw="320"
           align="flex-start"
           justify="center"

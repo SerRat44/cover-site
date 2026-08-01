@@ -20,7 +20,7 @@ function NavButton({ page }: { page: PageConfigProps }) {
 
 export function Sidebar() {
   return (
-    <Flex direction="column" component="aside" className="sidebar paper">
+    <Flex direction="column" component="aside" className="sidebar front-bg">
       <ScrollArea scrollbars="y" scrollbarSize={6}>
         <Stack p="xs" gap={4}>
           {pageConfig.map((page) => (

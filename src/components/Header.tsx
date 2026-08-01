@@ -1,5 +1,5 @@
 import { Flex, Group } from "@mantine/core";
-import { SidebarToggle } from "./SidebarToggle";
+import { SidebarToggle } from "./nav/SidebarToggle";
 import cs from "clsx";
 import {
   ModeToggle,
@@ -12,21 +12,22 @@ export function Header() {
     <Flex
       justify="space-between"
       align="center"
-      p="sm"
-      className="header paper orientation"
+      p={8}
+      h={{ base: "50", md: "60" }}
+      className="header front-bg orientation"
     >
       <SidebarToggle />
-      <Group
+      <Flex
         className="orientation"
         gap="sm"
-        w="min"
-        align="center"
-        justify="center"
+        h="100%"
+        w="max-content"
+        flex="shrink"
       >
         <OrientationToggle />
         <ColorSelectButton />
         <ModeToggle />
-      </Group>
+      </Flex>
     </Flex>
   );
 }

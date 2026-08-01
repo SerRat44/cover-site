@@ -8,6 +8,8 @@ import {
   mantineHtmlProps,
   Flex,
   ScrollArea,
+  Box,
+  Container,
 } from "@mantine/core";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
@@ -42,39 +44,41 @@ export default async function RootLayout({
 
       <body>
         <UserSettingsProvider initialSettings={settings}>
-          <Flex mih="100dvh" h="100%" direction="column">
-            <Header />
+          <main>
+            <Flex h="100dvh" direction="column">
+              <Header />
 
-            <Flex
-              className="orientation"
-              flex={1}
-              style={{ overflow: "hidden", position: "relative" }}
-            >
-              <Sidebar />
-              <ScrollArea
-                className="scrollarea"
-                scrollbars="y"
-                scrollbarSize={8}
-                style={{ flex: 1, width: "100%" }}
-                viewportProps={{
-                  style: {
-                    display: "flex",
-                    flexDirection: "column",
-                  },
-                }}
+              <Flex
+                className="orientation"
+                flex={1}
+                pos="relative"
+                style={{ minHeight: 0 }}
               >
-                <Flex
-                  className="scrollarea-content"
+                <Sidebar />
+
+                <ScrollArea
+                  className="scrollarea"
+                  scrollbars="y"
+                  scrollbarSize={8}
                   flex={1}
-                  w="100%"
-                  direction="column"
+                  type="auto"
+                  classNames={{
+                    viewport: "scrollarea-content",
+                  }}
                 >
-                  <main className="main">{children}</main>
+                  <Box
+                    mih={{
+                      base: "calc(100dvh - 50px)",
+                      md: "calc(100dvh - 60px)",
+                    }}
+                  >
+                    {children}
+                  </Box>
                   <Footer />
-                </Flex>
-              </ScrollArea>
+                </ScrollArea>
+              </Flex>
             </Flex>
-          </Flex>
+          </main>
         </UserSettingsProvider>
 
         <SpeedInsights />

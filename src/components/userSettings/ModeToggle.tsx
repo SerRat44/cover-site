@@ -19,8 +19,9 @@ export function ModeToggle() {
         setColorScheme(computedColorScheme === "light" ? "dark" : "light")
       }
       variant="subtle"
-      size="lg"
       aria-label="Toggle color scheme"
+      h="100%"
+      w="auto"
     >
       <TbSun className="icon dark-only" />
       <TbMoon className="icon light-only" />
